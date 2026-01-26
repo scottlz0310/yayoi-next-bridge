@@ -1,0 +1,75 @@
+[project]
+name = "yayoi-next-bridge"
+version = "0.1.0"
+description = "弥生給与NEXT → 弥生会計NEXT 仕訳データ変換ツール"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "nicegui>=2.0.0",
+]
+
+[project.scripts]
+yayoi-next-bridge = "yayoi_next_bridge.gui.app:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.4.0",
+    "basedpyright>=1.10.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "ALL",  # 全ルール有効
+]
+ignore = [
+    "D",        # docstring関連（日本語docstringのため）
+    "COM812",   # trailing comma（formatterと競合）
+    "ISC001",   # implicit string concatenation（formatterと競合）
+    "RUF001",   # ambiguous unicode（日本語使用のため）
+    "RUF002",   # ambiguous unicode in docstring（日本語使用のため）
+    "RUF003",   # ambiguous unicode in comment（日本語使用のため）
+    "ERA001",   # commented-out code（日本語コメントの誤検知）
+    "TC003",    # move import into type-checking block（実行時に必要）
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",     # assert使用OK
+    "PLR2004",  # magic value OK
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.basedpyright]
+pythonVersion = "3.11"
+typeCheckingMode = "strict"
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["yayoi_next_bridge"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
