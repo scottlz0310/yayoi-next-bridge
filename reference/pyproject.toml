@@ -1,0 +1,10 @@
+[project]
+name = "payroll-converter"
+version = "0.1.0"
+description = "弥生給与NEXT → 弥生会計NEXT 仕訳データ変換ツール"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+convert-payroll = "convert_payroll_to_accounting:main"
