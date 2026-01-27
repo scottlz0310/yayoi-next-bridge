@@ -4,7 +4,17 @@
  * 弥生会計NEXTのインポート画面に最小限のUIを注入する
  * - ボタン1個のみ
  * - クリックでSide Panelを開く
+ * - SPAのURL変化を監視して表示/非表示を切り替え
  */
+
+const IMPORT_PAGE_PATH = '/config/data-management/import';
+
+/**
+ * 現在のURLがインポートページかどうかを判定
+ */
+function isImportPage(): boolean {
+  return window.location.pathname.startsWith(IMPORT_PAGE_PATH);
+}
 
 // ボタンを作成
 function createBridgeButton(): HTMLButtonElement {
@@ -13,7 +23,7 @@ function createBridgeButton(): HTMLButtonElement {
   button.textContent = '📁 給与データを変換';
   button.style.cssText = `
     position: fixed;
-    top: 20px;
+    top: 80px;
     right: 20px;
     z-index: 10000;
     padding: 12px 20px;
@@ -41,14 +51,9 @@ function createBridgeButton(): HTMLButtonElement {
 
   // クリックでSide Panelを開く
   button.addEventListener('click', () => {
-    chrome.runtime
-      .sendMessage({ action: 'openSidePanel' })
-      .then(() => {
-        console.log('Side Panelを開きました');
-      })
-      .catch((error) => {
-        console.error('Side Panelを開けませんでした:', error);
-      });
+    chrome.runtime.sendMessage({ action: 'openSidePanel' }).catch(() => {
+      // エラーは無視（Side Panelが開けない環境等）
+    });
   });
 
   return button;
@@ -63,12 +68,45 @@ function injectButton(): void {
 
   const button = createBridgeButton();
   document.body.appendChild(button);
-  console.log('弥生NEXTブリッジのボタンを注入しました');
 }
 
-// DOMContentLoaded後に注入
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectButton);
-} else {
-  injectButton();
+// ボタンを削除
+function removeButton(): void {
+  const button = document.getElementById('yayoi-next-bridge-button');
+  if (button) {
+    button.remove();
+  }
 }
+
+// URLに応じてボタンの表示/非表示を更新
+function updateButtonVisibility(): void {
+  if (isImportPage()) {
+    injectButton();
+  } else {
+    removeButton();
+  }
+}
+
+// 初回チェック
+updateButtonVisibility();
+
+// SPA遷移を監視（History APIのフック）
+let lastUrl = window.location.href;
+
+// popstateイベント（ブラウザの戻る/進む）
+window.addEventListener('popstate', () => {
+  updateButtonVisibility();
+});
+
+// MutationObserverでURL変化を検出（pushState/replaceState対応）
+const observer = new MutationObserver(() => {
+  if (window.location.href !== lastUrl) {
+    lastUrl = window.location.href;
+    updateButtonVisibility();
+  }
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});

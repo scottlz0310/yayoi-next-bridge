@@ -135,5 +135,6 @@ export function stringifyCSV(rows: string[][]): string {
       .join(',');
   });
 
-  return lines.join('\r\n');
+  // 弥生会計NEXTの形式に合わせ、最終行もCRLFで終わる
+  return `${lines.join('\r\n')}\r\n`;
 }

@@ -1,5 +1,8 @@
 # 弥生NEXTブリッジ - Chrome拡張
 
+[![CI](https://github.com/scottlz0310/yayoi-next-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/scottlz0310/yayoi-next-bridge/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/scottlz0310/yayoi-next-bridge/graph/badge.svg?flag=chrome-extension)](https://codecov.io/gh/scottlz0310/yayoi-next-bridge)
+
 弥生給与NEXTのエクスポートデータを弥生会計NEXTのインポート形式に変換するChrome拡張機能です。
 
 ## 特徴
@@ -7,6 +10,7 @@
 - ✅ **完全オフライン処理**: すべての変換処理はブラウザ内で完結（外部サーバーへの送信なし）
 - ✅ **セキュア**: 弥生NEXTの認証情報・Cookieには一切アクセスしません
 - ✅ **決定的**: 同一入力に対して常に同一出力を保証
+- ✅ **ドラッグ&ドロップ**: ファイル選択もD&Dで簡単操作
 - ✅ **シームレス**: Side Panel UIで弥生NEXTと並行して作業可能
 - ✅ **Shift-JIS完全対応**: 日本語文字コードを正しく処理
 
@@ -36,11 +40,15 @@ npm run build
 
 ### 基本的な使い方
 
-1. 弥生会計NEXTのインポート画面を開く
+1. 弥生会計NEXTのインポート画面（`設定` → `データ管理` → `インポート`）を開く
 2. 画面右上の「📁 給与データを変換」ボタンをクリック
-3. Side Panelが開くので、変換したいファイルを選択
-4. 「変換する」ボタンをクリック
-5. 変換が成功すると、自動的にダウンロードが開始されます
+3. Side Panelが開くので、以下のいずれかで変換するファイルを選択：
+   - **ドラッグ&ドロップ**: ファイルをドロップエリアにドラッグ
+   - **ボタンクリック**: 「ファイルを選択」ボタンから選択
+4. 変換が成功すると、自動的にダウンロードが開始されます
+5. ダウンロードされたファイルをそのまま弥生会計NEXTにインポート！
+
+> 💡 **Tips**: 変換後のダウンロードファイルから直接インポートボタンへD&Dすると、流れが途切れず効率的です！
 
 ### 対応ファイル形式
 

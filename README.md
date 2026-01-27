@@ -1,56 +1,76 @@
 # 弥生NEXTブリッジ（yayoi-next-bridge）
 
+[![CI](https://github.com/scottlz0310/yayoi-next-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/scottlz0310/yayoi-next-bridge/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/scottlz0310/yayoi-next-bridge/graph/badge.svg)](https://codecov.io/gh/scottlz0310/yayoi-next-bridge)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 弥生給与Next のエクスポート出力を、弥生会計Next のインポートで取り込める形式に変換するためのコンバーターです。  
 （給与Next と 会計Next の間の "微妙な非互換" を吸収します）
 
-## 🚀 利用可能な実装
+## 🚀 クイックスタート（Chrome拡張）
 
-### 1. Chrome拡張（推奨）✨
+最も簡単に使える方法です。**弥生会計NEXT画面で直接変換できます**。
 
-最も簡単に使える形式です。**弥生会計NEXT画面で直接変換できます**。
+### インストール
 
-- 📍 場所: `chrome-extension/`
-- 🔗 詳細: [Chrome拡張のREADME](chrome-extension/README.md)
-- ✅ 特徴:
-  - 弥生NEXT画面から直接アクセス
-  - 完全オフライン動作（外部送信なし）
-  - ワンクリック変換
-  - Shift-JIS完全対応
-
-**インストール方法:**
 ```bash
 cd chrome-extension
 npm install
 npm run build
-# Chromeで chrome://extensions/ を開き、distフォルダを読み込む
 ```
 
-### 2. Pythonスクリプト（CLI）
+### Chromeへの読み込み
 
-コマンドラインで使える軽量版です。
+1. Chromeで `chrome://extensions/` を開く
+2. 右上の「デベロッパーモード」を有効化
+3. 「パッケージ化されていない拡張機能を読み込む」をクリック
+4. `chrome-extension/dist` ディレクトリを選択
 
-- 📍 場所: `reference/`
-- 📝 使い方:
-  ```bash
-  cd reference
-  uv run python convert_payroll_to_accounting.py <入力ファイル>
-  # または
-  uv run python convert_payroll_to_accounting.py --all  # 全月一括変換
-  ```
+### 使い方
 
-### 3. Python GUIアプリ（開発中）
+1. **弥生会計NEXT**のインポート画面（`設定` → `データ管理` → `インポート`）を開く
+2. 画面右上の「📁 給与データを変換」ボタンをクリック
+3. Side Panelが開くので、変換したい給与データファイルを**ドラッグ&ドロップ**
+4. 自動的に変換され、ダウンロードが開始されます
+5. ダウンロードされたファイルをそのまま弥生会計NEXTのインポートへ！
 
-- 📍 場所: `yayoi_next_bridge/`
-- 🔄 ステータス: 開発中
+> 💡 **Tips**: 変換後のダウンロードファイルから直接インポートボタンへD&Dすると、流れが途切れず効率的です！
 
-## できること
+## 📦 利用可能な実装
+
+| 実装 | 場所 | ステータス | 特徴 |
+|------|------|------------|------|
+| **Chrome拡張** ✨ | `chrome-extension/` | ✅ 安定版 | 弥生画面で直接変換、D&D対応 |
+| Pythonスクリプト | `reference/` | ✅ 動作 | CLI、一括変換対応 |
+| Python GUI | `yayoi_next_bridge/` | 🚧 開発中 | デスクトップアプリ |
+
+### Pythonスクリプト（CLI）
+
+```bash
+cd reference
+uv run python convert_payroll_to_accounting.py <入力ファイル>
+# または全月一括変換
+uv run python convert_payroll_to_accounting.py --all
+```
+
+## ✨ 特徴
+
+- ✅ **完全オフライン**: すべての処理はローカルで完結（外部サーバーへの送信なし）
+- ✅ **セキュア**: 弥生NEXTの認証情報・Cookieには一切アクセスしません
+- ✅ **決定的**: 同一入力に対して常に同一出力を保証
+- ✅ **Shift-JIS完全対応**: 日本語文字コードを正しく処理
+- ✅ **ドラッグ&ドロップ**: ファイル選択の手間を最小化
+
+## 🎯 できること / できないこと
+
+### ✅ できること
 
 - 弥生給与Next の出力データを、弥生会計Next で取り込める形式に変換
-- 変換処理の実行（CLI / GUI）
-- 変換ログの表示・出力（予定）
-- 入力ファイルのバリデーション（予定）
+- 変換処理の実行（Chrome拡張 / CLI / GUI）
+- Shift-JISエンコーディングの維持
+- 入力ファイルのバリデーション
 
-## できないこと（スコープ外）
+### ❌ できないこと（スコープ外）
 
 - 会計処理や仕訳ルールの自動生成など、業務判断が必要な処理
 - 変換処理を “賢くする” 方向の拡張（AI活用など）
@@ -58,89 +78,81 @@ npm run build
 
 本ツールは **「確実に変換できる」「迷わず使える」** を優先します。
 
-## 想定ユーザー
+## 👤 想定ユーザー
 
 - 弥生給与Next → 弥生会計Next の連携で困っている人
 - 変換作業を手作業で整形していて、毎回時間が溶けている人
-- 自動化したいのに手入力を強いられてイライラしている人
 - 公式の対応を待っていられない人
 
-## 使い方（CLI）
+## 🛠️ 技術スタック
 
-> コアロジックはCLIで動作します。GUIはこの上に載せるだけの方針です。
+### Chrome拡張（推奨）
 
-### 現状
+| 項目 | 技術 |
+|------|------|
+| 言語 | TypeScript（strict mode） |
+| ビルド | Vite + CRXJS |
+| Lint/Format | Biome |
+| テスト | Vitest |
+| 文字コード | encoding-japanese |
+| Chrome API | Manifest V3, Side Panel API |
 
-- 既存の変換ロジックは `reference/` 配下のスクリプトでコマンドライン実行できます。
+### Python CLI（参考実装）
 
-### 今後の予定
+| 項目 | 技術 |
+|------|------|
+| 言語 | Python 3.11+ |
+| パッケージ管理 | uv |
+| 使用方法 | `reference/` 配下で実行 |
 
-- 既存スクリプトのロジックを参考に、変換コアを整理してリライトします。
-- CLIは `--input` / `--output` を基本として提供します。
-- ※ `--input` / `--output` の形式は実データに合わせて調整します。
-
-## 使い方（GUI）
-
-準備中です。  
-狙いは「社内ツールとして使いやすい最小限のGUI」で、以下を満たすことを目標にしています。
-
-- 入力ファイル選択（ファイル単位 / フォルダ単位）
-- 出力先指定
-- 実行ボタン
-- 進捗・ログ表示
-- 失敗時のエラー表示（何が原因か分かる）
-
-### 操作イメージ
-
-- ファイルオープンダイアログでファイル単位、またはフォルダ単位で選択  
-  - フォルダ指定の場合は再帰検索オプションあり
-- フォルダ指定の場合、弥生給与Nextの出力形式の命名パターンを検索し、一括変換
-- 保存ファイルはインポート時の見やすさも考慮し、プレフィックスを付与して保存
-
-GUIは **コアロジックの薄いラッパー** とし、複雑化させない方針です。
-GUIは利便性向上のための最小実装に留め、業務ロジックは必ず core に集約します。
-
-## 技術スタック（検討中）
-
-配布の容易さと実装コストのバランスを取りつつ、GUIの複雑化を避ける方針です。
-
-候補：
-- Chrome拡張機能
-- NiceGUI（Python製GUIフレームワーク）
-- FastAPI + 静的サイト（Reactなど）
-
-## 開発方針
-
-- 変換コア（CLI）は安定性を最優先し、GUIから独立させる
-- 変換結果の再現性（同じ入力 → 同じ出力）を担保する
-- 例外系（入力ミス・形式違い）は “落ち方” を丁寧にする
-
-## ディレクトリ構成（案）
+## 📁 ディレクトリ構成
 
 ```text
 .
-├─ yayoi_next_bridge/         # アプリ本体（Pythonパッケージ想定）
-│  ├─ core/                   # 変換ロジック
-│  ├─ gui/                    # GUI（予定）
+├─ chrome-extension/          # Chrome拡張機能（推奨）
+│  ├─ src/
+│  │  ├─ converter/           # 変換ロジック
+│  │  ├─ panel/               # Side Panel UI
+│  │  ├─ content/             # Content Script
+│  │  └─ background/          # Service Worker
 │  └─ tests/                  # テスト
-├─ reference/                 # 既存スクリプト（参考実装）
-└─ README.md
-
-   
+├─ yayoi_next_bridge/         # Python版（開発中）
+│  ├─ core/                   # 変換ロジック
+│  └─ gui/                    # GUI（検討中）
+├─ reference/                 # 参考実装（Python/PowerShell）
+└─ docs/                      # ドキュメント
 ```
 
-## テスト（予定）
+## 🧪 開発
 
-* サンプル入力に対して、期待される出力になるかの回帰テスト
-* エラー系（カラム不足 / 文字コード / フォーマット揺れ）テスト
+### Chrome拡張の開発
 
-## ライセンス
+```bash
+cd chrome-extension
+npm install
+npm run dev          # 開発サーバー（ホットリロード）
+npm run test         # テスト実行
+npm run lint         # Lintチェック
+npm run build        # 本番ビルド
+```
+
+### Python参考実装の実行
+
+```bash
+cd reference
+uv run python convert_payroll_to_accounting.py --all        # 一括変換
+uv run python convert_payroll_to_accounting.py "入力.txt"    # 単一ファイル
+```
+
+## 📄 ライセンス
 
 MIT License
 
----
+## ⚠️ 免責
 
-## 免責
+本ツールは弥生株式会社の公式ツールではありません。利用は自己責任でお願いします。
 
-本ツールは弥生株式会社の公式ツールではありません。
-利用は自己責任でお願いします。
+## 🔗 参考リンク
+
+- [弥生会計NEXT インポート仕様](https://support.yayoi-kk.co.jp/subcontents.html?page_id=29611)
+- [Chrome Side Panel API](https://developer.chrome.com/docs/extensions/reference/api/sidePanel)

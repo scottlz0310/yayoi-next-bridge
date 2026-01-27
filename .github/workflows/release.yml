@@ -1,0 +1,137 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-version:
+    name: バージョン整合性チェック
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: タグからバージョンを抽出
+        id: extract
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 リリースバージョン: $VERSION"
+
+      - name: バージョン整合性チェック
+        run: |
+          VERSION=${{ steps.extract.outputs.version }}
+          
+          # package.json
+          PKG_VERSION=$(node -p "require('./chrome-extension/package.json').version")
+          if [ "$PKG_VERSION" != "$VERSION" ]; then
+            echo "❌ package.json のバージョン ($PKG_VERSION) がタグ ($VERSION) と一致しません"
+            exit 1
+          fi
+          echo "✅ package.json: $PKG_VERSION"
+          
+          # manifest.json
+          MANIFEST_VERSION=$(node -p "require('./chrome-extension/manifest.json').version")
+          if [ "$MANIFEST_VERSION" != "$VERSION" ]; then
+            echo "❌ manifest.json のバージョン ($MANIFEST_VERSION) がタグ ($VERSION) と一致しません"
+            exit 1
+          fi
+          echo "✅ manifest.json: $MANIFEST_VERSION"
+          
+          # pyproject.toml
+          PYPROJECT_VERSION=$(grep -E '^version\s*=' pyproject.toml | sed 's/version\s*=\s*"\([^"]*\)"/\1/')
+          if [ "$PYPROJECT_VERSION" != "$VERSION" ]; then
+            echo "❌ pyproject.toml のバージョン ($PYPROJECT_VERSION) がタグ ($VERSION) と一致しません"
+            exit 1
+          fi
+          echo "✅ pyproject.toml: $PYPROJECT_VERSION"
+          
+          echo ""
+          echo "🎉 全ファイルのバージョンが一致しています: $VERSION"
+
+  build-extension:
+    name: Chrome拡張ビルド
+    needs: validate-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: chrome-extension/package-lock.json
+
+      - name: 依存関係インストール
+        working-directory: chrome-extension
+        run: npm ci
+
+      - name: ビルド
+        working-directory: chrome-extension
+        run: npm run build
+
+      - name: ZIPパッケージ作成
+        working-directory: chrome-extension
+        run: |
+          cd dist
+          zip -r ../yayoi-next-bridge-${{ needs.validate-version.outputs.version }}.zip .
+
+      - name: アーティファクトをアップロード
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: chrome-extension/yayoi-next-bridge-${{ needs.validate-version.outputs.version }}.zip
+
+  create-release:
+    name: GitHubリリース作成
+    needs: [validate-version, build-extension]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: アーティファクトをダウンロード
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension
+          path: ./artifacts
+
+      - name: CHANGELOGからリリースノートを抽出
+        id: changelog
+        run: |
+          # Unreleasedセクションまたは該当バージョンのセクションを抽出
+          VERSION=${{ needs.validate-version.outputs.version }}
+          
+          # CHANGELOGからリリースノートを抽出（簡易版）
+          if grep -q "## \[$VERSION\]" CHANGELOG.md; then
+            # 該当バージョンのセクションを抽出
+            sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | head -n -1 > release_notes.md
+          else
+            # Unreleasedセクションを使用
+            sed -n '/## \[Unreleased\]/,/## \[/p' CHANGELOG.md | head -n -1 > release_notes.md
+          fi
+          
+          # 空の場合はデフォルトメッセージ
+          if [ ! -s release_notes.md ]; then
+            echo "v$VERSION リリース" > release_notes.md
+          fi
+          
+          cat release_notes.md
+
+      - name: GitHubリリース作成
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ needs.validate-version.outputs.version }}
+          body_path: release_notes.md
+          files: |
+            artifacts/yayoi-next-bridge-${{ needs.validate-version.outputs.version }}.zip
+          draft: false
+          prerelease: ${{ contains(needs.validate-version.outputs.version, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -48,25 +48,25 @@ describe('CSV Utilities', () => {
   });
 
   describe('stringifyCSV', () => {
-    it('通常のCSVを出力できる', () => {
+    it('通常のCSVを出力できる（最終行もCRLFで終わる）', () => {
       const input = [
         ['a', 'b', 'c'],
         ['1', '2', '3'],
       ];
       const result = stringifyCSV(input);
-      expect(result).toBe('a,b,c\r\n1,2,3');
+      expect(result).toBe('a,b,c\r\n1,2,3\r\n');
     });
 
     it('カンマを含むフィールドを引用符で囲む', () => {
       const input = [['a,b', 'c', 'd']];
       const result = stringifyCSV(input);
-      expect(result).toBe('"a,b",c,d');
+      expect(result).toBe('"a,b",c,d\r\n');
     });
 
     it('引用符を含むフィールドをエスケープする', () => {
       const input = [['a"b', 'c', 'd']];
       const result = stringifyCSV(input);
-      expect(result).toBe('"a""b",c,d');
+      expect(result).toBe('"a""b",c,d\r\n');
     });
   });
 });

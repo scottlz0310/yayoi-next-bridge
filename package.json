@@ -1,0 +1,20 @@
+{
+  "name": "yayoi-next-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "弥生給与NEXT → 弥生会計NEXT データ変換ツール",
+  "type": "module",
+  "scripts": {
+    "version:check": "node scripts/bump-version.js",
+    "version:patch": "node scripts/bump-version.js patch",
+    "version:minor": "node scripts/bump-version.js minor",
+    "version:major": "node scripts/bump-version.js major",
+    "release": "node scripts/release.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottlz0310/yayoi-next-bridge.git"
+  },
+  "author": "",
+  "license": "MIT"
+}

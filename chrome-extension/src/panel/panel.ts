@@ -15,6 +15,7 @@ const resultStatus = document.getElementById('resultStatus') as HTMLSpanElement;
 const resultSlipCount = document.getElementById('resultSlipCount') as HTMLSpanElement;
 const resultRowCount = document.getElementById('resultRowCount') as HTMLSpanElement;
 const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
+const dropZone = document.getElementById('dropZone') as HTMLDivElement;
 
 // 選択されたファイル
 let selectedFile: File | null = null;
@@ -33,19 +34,9 @@ function formatFileSize(bytes: number): string {
 }
 
 /**
- * ファイル選択時の処理
+ * ファイルを選択状態にする（共通処理）
  */
-fileInput.addEventListener('change', (event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-
-  if (!file) {
-    selectedFile = null;
-    fileInfo.classList.add('hidden');
-    convertButton.disabled = true;
-    return;
-  }
-
+function selectFile(file: File): void {
   selectedFile = file;
 
   // ファイル情報を表示
@@ -62,6 +53,69 @@ fileInput.addEventListener('change', (event) => {
 
   // 前回の結果をクリア
   resultSection.classList.add('hidden');
+}
+
+/**
+ * ファイル選択時の処理
+ */
+fileInput.addEventListener('change', (event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+
+  if (!file) {
+    selectedFile = null;
+    fileInfo.classList.add('hidden');
+    convertButton.disabled = true;
+    return;
+  }
+
+  selectFile(file);
+});
+
+/**
+ * ドラッグ&ドロップのイベント処理
+ */
+
+// ドラッグ進入時
+dropZone.addEventListener('dragenter', (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  dropZone.classList.add('drag-over');
+});
+
+// ドラッグ中
+dropZone.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  dropZone.classList.add('drag-over');
+});
+
+// ドラッグ離脱時
+dropZone.addEventListener('dragleave', (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  dropZone.classList.remove('drag-over');
+});
+
+// ドロップ時
+dropZone.addEventListener('drop', (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  dropZone.classList.remove('drag-over');
+
+  const files = event.dataTransfer?.files;
+  if (files && files.length > 0) {
+    const file = files[0];
+    if (!file) {
+      return;
+    }
+    // .txt または .csv ファイルのみ受け付ける
+    if (file.name.endsWith('.txt') || file.name.endsWith('.csv')) {
+      selectFile(file);
+    } else {
+      alert('対応ファイル形式: .txt, .csv');
+    }
+  }
 });
 
 /**

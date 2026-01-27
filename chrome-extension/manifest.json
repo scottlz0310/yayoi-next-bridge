@@ -9,21 +9,28 @@
     "128": "assets/icons/icon128.png"
   },
   "permissions": ["sidePanel"],
-  "host_permissions": ["https://app.yayoi-kk.co.jp/ac-next/*/import*"],
+  "host_permissions": ["https://next-kaikei.yayoi-kk.co.jp/*"],
   "background": {
     "service_worker": "src/background/service-worker.ts",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["https://app.yayoi-kk.co.jp/ac-next/*/import*"],
-      "js": ["src/content/content-script.ts"]
+      "matches": ["https://next-kaikei.yayoi-kk.co.jp/*"],
+      "js": ["src/content/content-script.ts"],
+      "run_at": "document_idle"
     }
   ],
   "side_panel": {
     "default_path": "src/panel/panel.html"
   },
   "action": {
-    "default_title": "弥生NEXTブリッジを開く"
+    "default_title": "弥生NEXTブリッジを開く",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "19": "assets/icons/icon19.png",
+      "38": "assets/icons/icon38.png",
+      "48": "assets/icons/icon48.png"
+    }
   }
 }

@@ -96,6 +96,13 @@ body {
   border-color: #667eea;
 }
 
+/* D&Dドラッグ中のスタイル */
+.file-input-wrapper.drag-over .file-input-label {
+  background-color: #e7f3ff;
+  border-color: #667eea;
+  border-style: solid;
+}
+
 .file-icon {
   font-size: 20px;
 }
