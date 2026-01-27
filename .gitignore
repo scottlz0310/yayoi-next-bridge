@@ -33,6 +33,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+!chrome-extension/src/lib/
 lib64/
 parts/
 sdist/
@@ -63,3 +64,6 @@ htmlcov/
 
 # Pyright
 pyrightconfig.json
+
+# Backup files
+*.bak

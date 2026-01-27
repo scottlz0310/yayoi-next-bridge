@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>弥生NEXTブリッジ</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>弥生NEXTブリッジ</h1>
+        <p class="subtitle">給与NEXT → 会計NEXT データ変換</p>
+      </header>
+
+      <main class="main">
+        <section class="upload-section">
+          <h2>ファイル選択</h2>
+          <div class="file-input-wrapper">
+            <input
+              type="file"
+              id="fileInput"
+              accept=".txt,.csv"
+              class="file-input"
+            />
+            <label for="fileInput" class="file-input-label">
+              <span class="file-icon">📁</span>
+              <span class="file-text">ファイルを選択</span>
+            </label>
+          </div>
+          <div id="fileInfo" class="file-info hidden">
+            <span class="file-name"></span>
+            <span class="file-size"></span>
+          </div>
+        </section>
+
+        <section class="action-section">
+          <button id="convertButton" class="btn btn-primary" disabled>
+            変換する
+          </button>
+        </section>
+
+        <section id="resultSection" class="result-section hidden">
+          <h2>変換結果</h2>
+          <div id="resultContent" class="result-content">
+            <div class="result-item">
+              <span class="result-label">ステータス:</span>
+              <span id="resultStatus" class="result-value"></span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">変換した伝票数:</span>
+              <span id="resultSlipCount" class="result-value"></span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">変換した仕訳行数:</span>
+              <span id="resultRowCount" class="result-value"></span>
+            </div>
+          </div>
+          <div id="errorMessage" class="error-message hidden"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p class="notice">
+          ⚠️ このツールは弥生株式会社の公式ツールではありません
+        </p>
+        <p class="privacy">
+          🔒 すべての処理はローカルで実行されます（外部送信なし）
+        </p>
+      </footer>
+    </div>
+
+    <script type="module" src="panel.ts"></script>
+  </body>
+</html>

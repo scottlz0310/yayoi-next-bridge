@@ -1,0 +1,31 @@
+{
+  "name": "@yayoi-next-bridge/chrome-extension",
+  "version": "0.1.0",
+  "description": "弥生給与NEXT → 弥生会計NEXT データ変換 Chrome拡張",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "dependencies": {
+    "encoding-japanese": "^2.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@crxjs/vite-plugin": "^2.0.0-beta.25",
+    "@types/chrome": "^0.0.277",
+    "@types/encoding-japanese": "^2.0.5",
+    "@vitest/ui": "^2.1.8",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8"
+  },
+  "private": true
+}

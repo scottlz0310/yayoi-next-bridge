@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "弥生NEXTブリッジ",
+  "version": "0.1.0",
+  "description": "弥生給与NEXTのデータを弥生会計NEXTのインポート形式に変換します",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "permissions": ["sidePanel"],
+  "host_permissions": ["https://app.yayoi-kk.co.jp/ac-next/*/import*"],
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.yayoi-kk.co.jp/ac-next/*/import*"],
+      "js": ["src/content/content-script.ts"]
+    }
+  ],
+  "side_panel": {
+    "default_path": "src/panel/panel.html"
+  },
+  "action": {
+    "default_title": "弥生NEXTブリッジを開く"
+  }
+}
