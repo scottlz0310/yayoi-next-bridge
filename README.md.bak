@@ -1,47 +1,7 @@
 # 弥生NEXTブリッジ（yayoi-next-bridge）
 
 弥生給与Next のエクスポート出力を、弥生会計Next のインポートで取り込める形式に変換するためのコンバーターです。  
-（給与Next と 会計Next の間の "微妙な非互換" を吸収します）
-
-## 🚀 利用可能な実装
-
-### 1. Chrome拡張（推奨）✨
-
-最も簡単に使える形式です。**弥生会計NEXT画面で直接変換できます**。
-
-- 📍 場所: `chrome-extension/`
-- 🔗 詳細: [Chrome拡張のREADME](chrome-extension/README.md)
-- ✅ 特徴:
-  - 弥生NEXT画面から直接アクセス
-  - 完全オフライン動作（外部送信なし）
-  - ワンクリック変換
-  - Shift-JIS完全対応
-
-**インストール方法:**
-```bash
-cd chrome-extension
-npm install
-npm run build
-# Chromeで chrome://extensions/ を開き、distフォルダを読み込む
-```
-
-### 2. Pythonスクリプト（CLI）
-
-コマンドラインで使える軽量版です。
-
-- 📍 場所: `reference/`
-- 📝 使い方:
-  ```bash
-  cd reference
-  uv run python convert_payroll_to_accounting.py <入力ファイル>
-  # または
-  uv run python convert_payroll_to_accounting.py --all  # 全月一括変換
-  ```
-
-### 3. Python GUIアプリ（開発中）
-
-- 📍 場所: `yayoi_next_bridge/`
-- 🔄 ステータス: 開発中
+（給与Next と 会計Next の間の “微妙な非互換” を吸収します）
 
 ## できること
 
