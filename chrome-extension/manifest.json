@@ -9,7 +9,7 @@
     "128": "assets/icons/icon128.png"
   },
   "permissions": ["sidePanel"],
-  "host_permissions": ["https://app.yayoi-kk.co.jp/ac-next/*"],
+  "host_permissions": ["https://app.yayoi-kk.co.jp/ac-next/*/import*"],
   "background": {
     "service_worker": "src/background/service-worker.ts",
     "type": "module"

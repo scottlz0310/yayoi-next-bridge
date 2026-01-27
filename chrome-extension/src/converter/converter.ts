@@ -16,30 +16,75 @@ import type {
 const PAYROLL_FIELD_COUNT = 14;
 const DATE_STRING_LENGTH = 8;
 
+// 有効なフラグ値
+const VALID_FLAGS = ['0110', '0100', '0101'] as const;
+const FLAG_START = '0110';
+const FLAG_END = '0101';
+
+/**
+ * 日付文字列がYYYYMMDD形式として妥当かチェック
+ * @param dateStr - チェックする日付文字列
+ * @returns 妥当な場合true
+ */
+function isValidDateFormat(dateStr: string): boolean {
+  if (dateStr.length !== DATE_STRING_LENGTH) {
+    return false;
+  }
+  // 全て数字かチェック
+  if (!/^\d{8}$/.test(dateStr)) {
+    return false;
+  }
+  // 基本的な日付妥当性チェック
+  const year = Number.parseInt(dateStr.slice(0, 4), 10);
+  const month = Number.parseInt(dateStr.slice(4, 6), 10);
+  const day = Number.parseInt(dateStr.slice(6, 8), 10);
+
+  if (year < 1900 || year > 2100) return false;
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+
+  return true;
+}
+
 /**
  * CSVフィールドからPayrollEntryを生成
  *
  * @param fields - CSVフィールド配列
  * @returns PayrollEntry
+ * @throws Error 不正なデータの場合
  */
 function parsePayrollEntry(fields: string[]): PayrollEntry {
-  // 不足項目を空白で埋める
-  const paddedFields = [...fields];
-  while (paddedFields.length < PAYROLL_FIELD_COUNT) {
-    paddedFields.push('');
+  // フィールド数チェック
+  if (fields.length < PAYROLL_FIELD_COUNT) {
+    throw new Error(
+      `入力データの項目数が不足しています。期待: ${PAYROLL_FIELD_COUNT}項目、実際: ${fields.length}項目`
+    );
+  }
+
+  const flag = fields[0] ?? '';
+  const dateRaw = fields[2] ?? '';
+
+  // フラグの妥当性チェック
+  if (!VALID_FLAGS.includes(flag as (typeof VALID_FLAGS)[number])) {
+    throw new Error(`不正な識別フラグです: "${flag}" (有効値: ${VALID_FLAGS.join(', ')})`);
+  }
+
+  // 日付の妥当性チェック
+  if (!isValidDateFormat(dateRaw)) {
+    throw new Error(`不正な日付形式です: "${dateRaw}" (期待形式: YYYYMMDD)`);
   }
 
   return {
-    flag: paddedFields[0] ?? '',
-    unknown: paddedFields[1] ?? '',
-    dateRaw: paddedFields[2] ?? '',
-    debitAccount: paddedFields[3] ?? '',
-    debitSub: paddedFields[4] ?? '',
-    debitAmount: paddedFields[7] ?? '',
-    creditAccount: paddedFields[8] ?? '',
-    creditSub: paddedFields[9] ?? '',
-    creditAmount: paddedFields[12] ?? '',
-    description: paddedFields[13] ?? '',
+    flag,
+    unknown: fields[1] ?? '',
+    dateRaw,
+    debitAccount: fields[3] ?? '',
+    debitSub: fields[4] ?? '',
+    debitAmount: fields[7] ?? '',
+    creditAccount: fields[8] ?? '',
+    creditSub: fields[9] ?? '',
+    creditAmount: fields[12] ?? '',
+    description: fields[13] ?? '',
   };
 }
 
@@ -172,19 +217,27 @@ function accountingEntryToFields(entry: AccountingEntry): string[] {
  * 弥生給与NEXTのCSV行配列を弥生会計NEXT形式に変換
  *
  * @param inputRows - 入力CSV行配列（弥生給与NEXT形式）
- * @param options - 変換オプション
  * @returns 変換結果
  */
-export function convertPayrollToAccounting(
-  inputRows: string[][],
-  _options?: ConversionOptions
-): { outputRows: string[][]; result: ConversionResult } {
+export function convertPayrollToAccounting(inputRows: string[][]): {
+  outputRows: string[][];
+  result: ConversionResult;
+} {
   const outputRows: string[][] = [];
   let slipCount = 0;
   let currentSlipRows: string[][] = [];
+  let isFirstNonEmptyLine = true;
 
   try {
-    for (const fields of inputRows) {
+    // 入力が空の場合
+    if (inputRows.length === 0) {
+      throw new Error('入力データが空です');
+    }
+
+    for (let i = 0; i < inputRows.length; i++) {
+      const fields = inputRows[i];
+      if (!fields) continue;
+
       // 空行をスキップ
       if (fields.length === 0 || fields.every((f) => f.trim() === '')) {
         continue;
@@ -192,10 +245,25 @@ export function convertPayrollToAccounting(
 
       const payrollEntry = parsePayrollEntry(fields);
 
+      // 最初の非空行は0110でなければならない
+      if (isFirstNonEmptyLine) {
+        if (payrollEntry.flag !== FLAG_START) {
+          throw new Error(
+            `最初の行は識別フラグ "${FLAG_START}" でなければなりません（実際: "${payrollEntry.flag}"、行: ${i + 1}）`
+          );
+        }
+        isFirstNonEmptyLine = false;
+      }
+
       // 伝票の開始を判定
-      if (payrollEntry.flag === '0110') {
-        // 前の伝票があれば出力リストに追加
+      if (payrollEntry.flag === FLAG_START) {
+        // 前の伝票があれば妥当性をチェックして出力リストに追加
         if (currentSlipRows.length > 0) {
+          // 前の伝票が0101で終わっているかチェック
+          const lastEntry = inputRows[i - 1];
+          if (lastEntry && lastEntry.length > 0 && lastEntry[0] !== FLAG_END) {
+            throw new Error(`伝票が識別フラグ "${FLAG_END}" で終了していません（行: ${i}）`);
+          }
           outputRows.push(...currentSlipRows);
           slipCount++;
         }
@@ -211,8 +279,18 @@ export function convertPayrollToAccounting(
 
     // 最後の伝票を追加
     if (currentSlipRows.length > 0) {
+      // 最後の伝票が0101で終わっているかチェック
+      const lastRow = inputRows[inputRows.length - 1];
+      if (lastRow && lastRow.length > 0 && lastRow[0] !== FLAG_END) {
+        throw new Error(`最後の伝票が識別フラグ "${FLAG_END}" で終了していません`);
+      }
       outputRows.push(...currentSlipRows);
       slipCount++;
+    }
+
+    // 結果が空の場合はエラー
+    if (outputRows.length === 0) {
+      throw new Error('変換結果が空です。有効なデータが含まれていません');
     }
 
     return {
@@ -241,15 +319,15 @@ export function convertPayrollToAccounting(
  * 弥生給与NEXTのCSVテキストを弥生会計NEXT形式に変換
  *
  * @param inputText - 入力CSVテキスト（弥生給与NEXT形式）
- * @param options - 変換オプション
+ * @param _options - 変換オプション（将来の拡張用）
  * @returns 出力CSVテキスト（弥生会計NEXT形式）と変換結果
  */
 export function convertCSVText(
   inputText: string,
-  options?: ConversionOptions
+  _options?: ConversionOptions
 ): { outputText: string; result: ConversionResult } {
   const inputRows = parseCSV(inputText);
-  const { outputRows, result } = convertPayrollToAccounting(inputRows, options);
+  const { outputRows, result } = convertPayrollToAccounting(inputRows);
 
   if (!result.success) {
     return { outputText: '', result };

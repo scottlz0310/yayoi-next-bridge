@@ -91,13 +91,14 @@ describe('Converter', () => {
           '300000',
           '1月給与',
         ],
+        ['0101', '', '20250115', '', '', '', '', '0', '', '', '', '', '0', ''],
       ];
       const { outputRows, result } = convertPayrollToAccounting(input);
 
       expect(result.success).toBe(true);
       expect(result.slipCount).toBe(1);
-      expect(result.rowCount).toBe(1);
-      expect(outputRows).toHaveLength(1);
+      expect(result.rowCount).toBe(2);
+      expect(outputRows).toHaveLength(2);
 
       const row = outputRows[0];
       expect(row).toBeDefined();
@@ -190,6 +191,7 @@ describe('Converter', () => {
           '100000',
           '給与1',
         ],
+        ['0101', '', '20250115', '', '', '', '', '0', '', '', '', '', '0', ''],
         [
           '0110',
           '',
@@ -206,13 +208,14 @@ describe('Converter', () => {
           '200000',
           '給与2',
         ],
+        ['0101', '', '20250120', '', '', '', '', '0', '', '', '', '', '0', ''],
       ];
       const { outputRows, result } = convertPayrollToAccounting(input);
 
       expect(result.success).toBe(true);
       expect(result.slipCount).toBe(2);
-      expect(result.rowCount).toBe(2);
-      expect(outputRows).toHaveLength(2);
+      expect(result.rowCount).toBe(4);
+      expect(outputRows).toHaveLength(4);
 
       const row1 = outputRows[0];
       expect(row1).toBeDefined();
@@ -221,11 +224,11 @@ describe('Converter', () => {
         expect(row1[16]).toBe('給与1');
       }
 
-      const row2 = outputRows[1];
-      expect(row2).toBeDefined();
-      if (row2) {
-        expect(row2[0]).toBe('2110');
-        expect(row2[16]).toBe('給与2');
+      const row3 = outputRows[2];
+      expect(row3).toBeDefined();
+      if (row3) {
+        expect(row3[0]).toBe('2110');
+        expect(row3[16]).toBe('給与2');
       }
     });
 
@@ -249,23 +252,142 @@ describe('Converter', () => {
         ],
         ['', '', '', '', '', '', '', '', '', '', '', '', '', ''],
         [],
+        ['0101', '', '20250115', '', '', '', '', '0', '', '', '', '', '0', ''],
       ];
       const { result } = convertPayrollToAccounting(input);
 
       expect(result.success).toBe(true);
       expect(result.slipCount).toBe(1);
-      expect(result.rowCount).toBe(1);
+      expect(result.rowCount).toBe(2);
+    });
+
+    // バリデーションテスト
+    it('不正なフラグでエラーになる', () => {
+      const input = [
+        [
+          '9999',
+          '',
+          '20250115',
+          '給料手当',
+          '',
+          '',
+          '',
+          '100000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '100000',
+          '給与',
+        ],
+      ];
+      const { result } = convertPayrollToAccounting(input);
+
+      expect(result.success).toBe(false);
+      expect(result.errorMessage).toContain('不正な識別フラグ');
+    });
+
+    it('最初の行が0110でないとエラーになる', () => {
+      const input = [
+        [
+          '0100',
+          '',
+          '20250115',
+          '給料手当',
+          '',
+          '',
+          '',
+          '100000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '100000',
+          '給与',
+        ],
+      ];
+      const { result } = convertPayrollToAccounting(input);
+
+      expect(result.success).toBe(false);
+      expect(result.errorMessage).toContain('最初の行は識別フラグ "0110"');
+    });
+
+    it('不正な日付形式でエラーになる', () => {
+      const input = [
+        [
+          '0110',
+          '',
+          '2025-01-15',
+          '給料手当',
+          '',
+          '',
+          '',
+          '100000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '100000',
+          '給与',
+        ],
+      ];
+      const { result } = convertPayrollToAccounting(input);
+
+      expect(result.success).toBe(false);
+      expect(result.errorMessage).toContain('不正な日付形式');
+    });
+
+    it('項目数不足でエラーになる', () => {
+      const input = [['0110', '', '20250115', '給料手当']];
+      const { result } = convertPayrollToAccounting(input);
+
+      expect(result.success).toBe(false);
+      expect(result.errorMessage).toContain('項目数が不足');
+    });
+
+    it('伝票が0101で終了していない場合エラーになる', () => {
+      const input = [
+        [
+          '0110',
+          '',
+          '20250115',
+          '給料手当',
+          '',
+          '',
+          '',
+          '100000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '100000',
+          '給与',
+        ],
+      ];
+      const { result } = convertPayrollToAccounting(input);
+
+      expect(result.success).toBe(false);
+      expect(result.errorMessage).toContain('識別フラグ "0101" で終了していません');
+    });
+
+    it('空の入力でエラーになる', () => {
+      const input: string[][] = [];
+      const { result } = convertPayrollToAccounting(input);
+
+      expect(result.success).toBe(false);
+      expect(result.errorMessage).toContain('入力データが空です');
     });
   });
 
   describe('convertCSVText', () => {
     it('CSV文字列を変換できる', () => {
-      const input = '0110,,20250115,給料手当,,,,300000,普通預金,,,,300000,1月給与';
+      const input =
+        '0110,,20250115,給料手当,,,,300000,普通預金,,,,300000,1月給与\r\n0101,,20250115,,,,,0,,,,,0,';
       const { outputText, result } = convertCSVText(input);
 
       expect(result.success).toBe(true);
       expect(result.slipCount).toBe(1);
-      expect(result.rowCount).toBe(1);
+      expect(result.rowCount).toBe(2);
       expect(outputText).toContain('2110');
       expect(outputText).toContain('2025/01/15');
       expect(outputText).toContain('給料手当');
