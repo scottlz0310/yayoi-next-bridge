@@ -65,9 +65,9 @@ GUIは利便性向上のための最小実装に留め、業務ロジックは�
 配布の容易さと実装コストのバランスを取りつつ、GUIの複雑化を避ける方針です。
 
 候補：
-- Tauri v2
-- Python + Flet
-- C# + .NET + WinUI 3
+- Chrome拡張機能
+- NiceGUI（Python製GUIフレームワーク）
+- FastAPI + 静的サイト（Reactなど）
 
 ## 開発方針
 
