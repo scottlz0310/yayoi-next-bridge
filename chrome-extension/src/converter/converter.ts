@@ -5,7 +5,12 @@
  * TypeScriptで型安全に実装したモジュール。
  */
 import { parseCSV, stringifyCSV } from './csv.ts';
-import type { AccountingEntry, ConversionOptions, ConversionResult, PayrollEntry } from './types.ts';
+import type {
+  AccountingEntry,
+  ConversionOptions,
+  ConversionResult,
+  PayrollEntry,
+} from './types.ts';
 
 // 定数定義
 const PAYROLL_FIELD_COUNT = 14;
@@ -172,7 +177,7 @@ function accountingEntryToFields(entry: AccountingEntry): string[] {
  */
 export function convertPayrollToAccounting(
   inputRows: string[][],
-  options?: ConversionOptions
+  _options?: ConversionOptions
 ): { outputRows: string[][]; result: ConversionResult } {
   const outputRows: string[][] = [];
   let slipCount = 0;

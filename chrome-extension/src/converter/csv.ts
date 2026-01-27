@@ -120,7 +120,12 @@ export function stringifyCSV(rows: string[][]): string {
     return row
       .map((field) => {
         // カンマ、改行、引用符を含む場合は引用符で囲む
-        if (field.includes(',') || field.includes('\n') || field.includes('\r') || field.includes('"')) {
+        if (
+          field.includes(',') ||
+          field.includes('\n') ||
+          field.includes('\r') ||
+          field.includes('"')
+        ) {
           // 引用符をエスケープ（"" に変換）
           const escaped = field.replace(/"/g, '""');
           return `"${escaped}"`;

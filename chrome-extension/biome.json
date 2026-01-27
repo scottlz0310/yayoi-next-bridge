@@ -11,6 +11,15 @@
     "lineWidth": 100,
     "lineEnding": "lf"
   },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always"
+    },
+    "globals": ["chrome"]
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -71,7 +80,6 @@
         "noExtraNonNullAssertion": "error",
         "noFallthroughSwitchClause": "error",
         "noFunctionAssign": "error",
-        "noGlobalObjectCalls": "error",
         "noImportAssign": "error",
         "noLabelVar": "error",
         "noMisleadingCharacterClass": "error",
@@ -92,14 +100,6 @@
         "useShorthandArrayType": "error",
         "useTemplate": "error"
       }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "single",
-      "trailingCommas": "es5",
-      "semicolons": "always",
-      "arrowParentheses": "always"
     }
   }
 }

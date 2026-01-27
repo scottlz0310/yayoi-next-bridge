@@ -8,21 +8,15 @@
     "48": "assets/icons/icon48.png",
     "128": "assets/icons/icon128.png"
   },
-  "permissions": [
-    "sidePanel"
-  ],
-  "host_permissions": [
-    "https://app.yayoi-kk.co.jp/ac-next/*"
-  ],
+  "permissions": ["sidePanel"],
+  "host_permissions": ["https://app.yayoi-kk.co.jp/ac-next/*"],
   "background": {
     "service_worker": "src/background/service-worker.ts",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://app.yayoi-kk.co.jp/ac-next/*/import*"
-      ],
+      "matches": ["https://app.yayoi-kk.co.jp/ac-next/*/import*"],
       "js": ["src/content/content-script.ts"]
     }
   ],

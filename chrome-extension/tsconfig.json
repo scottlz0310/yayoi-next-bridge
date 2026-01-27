@@ -11,7 +11,7 @@
     "noUnusedParameters": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
-    
+
     // モジュール解決
     "target": "ES2022",
     "module": "ESNext",
@@ -20,26 +20,20 @@
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "types": ["chrome", "vite/client", "vitest/globals"],
-    
+
     // 出力設定
     "noEmit": true,
     "isolatedModules": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    
+
     // パス設定
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "tests/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

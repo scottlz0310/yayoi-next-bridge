@@ -2,8 +2,8 @@
  * 変換ロジックのユニットテスト
  */
 import { describe, expect, it } from 'vitest';
-import { parseCSV, stringifyCSV } from '../src/converter/csv.ts';
 import { convertCSVText, convertPayrollToAccounting } from '../src/converter/converter.ts';
+import { parseCSV, stringifyCSV } from '../src/converter/csv.ts';
 
 describe('CSV Utilities', () => {
   describe('parseCSV', () => {
@@ -75,7 +75,22 @@ describe('Converter', () => {
   describe('convertPayrollToAccounting', () => {
     it('単一伝票を変換できる', () => {
       const input = [
-        ['0110', '', '20250115', '給料手当', '', '', '', '300000', '普通預金', '', '', '', '300000', '1月給与'],
+        [
+          '0110',
+          '',
+          '20250115',
+          '給料手当',
+          '',
+          '',
+          '',
+          '300000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '300000',
+          '1月給与',
+        ],
       ];
       const { outputRows, result } = convertPayrollToAccounting(input);
 
@@ -102,7 +117,22 @@ describe('Converter', () => {
     it('複数行伝票を変換できる', () => {
       const input = [
         ['0110', '', '20250115', '給料手当', '', '', '', '300000', '', '', '', '', '0', '1月給与'],
-        ['0100', '', '20250115', '法定福利費', '', '', '', '50000', '', '', '', '', '0', '社会保険料'],
+        [
+          '0100',
+          '',
+          '20250115',
+          '法定福利費',
+          '',
+          '',
+          '',
+          '50000',
+          '',
+          '',
+          '',
+          '',
+          '0',
+          '社会保険料',
+        ],
         ['0101', '', '20250115', '', '', '', '', '0', '普通預金', '', '', '', '350000', '振込'],
       ];
       const { outputRows, result } = convertPayrollToAccounting(input);
@@ -144,8 +174,38 @@ describe('Converter', () => {
 
     it('複数伝票を変換できる', () => {
       const input = [
-        ['0110', '', '20250115', '給料手当', '', '', '', '100000', '普通預金', '', '', '', '100000', '給与1'],
-        ['0110', '', '20250120', '給料手当', '', '', '', '200000', '普通預金', '', '', '', '200000', '給与2'],
+        [
+          '0110',
+          '',
+          '20250115',
+          '給料手当',
+          '',
+          '',
+          '',
+          '100000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '100000',
+          '給与1',
+        ],
+        [
+          '0110',
+          '',
+          '20250120',
+          '給料手当',
+          '',
+          '',
+          '',
+          '200000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '200000',
+          '給与2',
+        ],
       ];
       const { outputRows, result } = convertPayrollToAccounting(input);
 
@@ -171,11 +231,26 @@ describe('Converter', () => {
 
     it('空行を無視する', () => {
       const input = [
-        ['0110', '', '20250115', '給料手当', '', '', '', '100000', '普通預金', '', '', '', '100000', '給与'],
+        [
+          '0110',
+          '',
+          '20250115',
+          '給料手当',
+          '',
+          '',
+          '',
+          '100000',
+          '普通預金',
+          '',
+          '',
+          '',
+          '100000',
+          '給与',
+        ],
         ['', '', '', '', '', '', '', '', '', '', '', '', '', ''],
         [],
       ];
-      const { outputRows, result } = convertPayrollToAccounting(input);
+      const { result } = convertPayrollToAccounting(input);
 
       expect(result.success).toBe(true);
       expect(result.slipCount).toBe(1);
