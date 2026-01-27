@@ -64,3 +64,6 @@ htmlcov/
 
 # Pyright
 pyrightconfig.json
+
+# Backup files
+*.bak
