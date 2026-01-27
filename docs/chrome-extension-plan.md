@@ -189,7 +189,7 @@ function encodeShiftJIS(text: string): ArrayBuffer {
 
 ### 変換ロジックの移植
 
-Python実装からTypeScriptへの1:1移植：
+Python実装からTypeScriptへの1:1移植（`reference/` と `yayoi_next_bridge/` の既存実装・ドキュメントを参照）：
 
 ```typescript
 // types.ts
@@ -254,7 +254,7 @@ interface AccountingEntry {
 ### Phase 1: 基盤構築
 - [ ] Chrome拡張プロジェクトの初期セットアップ
 - [ ] TypeScript + Vite + CRXJS の設定
-- [ ] Biome（Lint/Format）の設定
+- [ ] Biome（Lint/Format）���設定
 - [ ] 基本的なmanifest.json作成（Side Panel対応）
 
 **Done条件:**
@@ -262,6 +262,7 @@ interface AccountingEntry {
 - Chromeに読み込んでSide Panelが開ける
 
 ### Phase 2: 変換ロジック移植
+- [ ] 既存実装（`reference/` と `yayoi_next_bridge/`）と既存ドキュメントを参照して差分を確認
 - [ ] 型定義（PayrollEntry, AccountingEntry）
 - [ ] Shift-JISエンコーディング処理（encoding-japanese）
 - [ ] CSV読み書きユーティリティ（行配列基準）
@@ -273,6 +274,7 @@ interface AccountingEntry {
   - 正常系（標準的な入力）
   - 文字コード系（Shift-JIS入出力）
   - 異常系（列不足・空行など）
+- 既存実装との差分が記録されている
 
 ### Phase 3a: Side Panel UI（単体動作）
 - [ ] Side Panel UI（ファイル選択→変換→ダウンロード）
@@ -311,6 +313,8 @@ interface AccountingEntry {
 | `chrome-extension/` | Chrome拡張版（TypeScript） | **新規作成** |
 
 スタンドアロン版は「Chrome以外のブラウザユーザー」「オフライン環境」向けとして維持する。
+
+> **移植時の参照方針**: `reference/` と `yayoi_next_bridge/` の実装・ドキュメントを参照し、仕様差分を記録する。
 
 ## 参考リンク
 
