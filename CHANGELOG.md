@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+### 変更
+- Python版（`yayoi_next_bridge/`）と参考実装（`reference/`）を `archive/` に移動
+- Chrome拡張をメイン実装として位置づけ
+
 ## [0.1.0] - 2026-01-27
 
 初回リリース 🎉
