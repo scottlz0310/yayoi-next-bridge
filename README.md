@@ -43,8 +43,11 @@ npm run build
 | 実装 | 場所 | ステータス | 特徴 |
 |------|------|------------|------|
 | **Chrome拡張** ✨ | `chrome-extension/` | ✅ 安定版 | 弥生画面で直接変換、D&D対応 |
+| Tampermonkey | `tampermonkey/` | ✅ 軽量版 | 単一ファイル、ビルド不要 |
 | Pythonスクリプト | `archive/reference/` | 📦 アーカイブ | CLI、一括変換対応 |
 | Python GUI | `archive/yayoi_next_bridge/` | 📦 アーカイブ | NiceGUIプロトタイプ |
+
+> 💡 **Tampermonkey版**: 開発者・パワーユーザー向けの軽量実装です。[Tampermonkey](https://www.tampermonkey.net/)がインストール済みなら、[yayoi-next-bridge.user.js](tampermonkey/yayoi-next-bridge.user.js) のRaw URLから直接インストールできます。
 
 ## ✨ 特徴
 
@@ -99,6 +102,7 @@ npm run build
 │  │  ├─ content/             # Content Script
 │  │  └─ background/          # Service Worker
 │  └─ tests/                  # テスト
+├─ tampermonkey/              # Tampermonkey版（軽量実装）
 ├─ scripts/                   # リリーススクリプト
 ├─ docs/                      # ドキュメント
 └─ archive/                   # アーカイブ（Python版）
