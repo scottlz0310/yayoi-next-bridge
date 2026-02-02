@@ -19,6 +19,7 @@
   // 定数
   // ============================================================
   const IMPORT_PAGE_PATH = '/config/data-management/import';
+  const IMPORT_PAGE_REGEX = /\/config\/data-management\/import(\/|$)/;
   const PAYROLL_FIELD_COUNT = 14;
   const DATE_STRING_LENGTH = 8;
   const VALID_FLAGS = ['0110', '0100', '0101'];
@@ -842,7 +843,14 @@
    * @returns {boolean}
    */
   function isImportPage() {
-    return window.location.pathname.startsWith(IMPORT_PAGE_PATH);
+    const pathname = window.location.pathname || '';
+    const hashPath = (window.location.hash || '').replace(/^#/, '');
+
+    if (IMPORT_PAGE_REGEX.test(pathname)) return true;
+    if (IMPORT_PAGE_REGEX.test(hashPath)) return true;
+
+    // 旧来の厳密比較（保険）
+    return pathname.startsWith(IMPORT_PAGE_PATH);
   }
 
   /**
