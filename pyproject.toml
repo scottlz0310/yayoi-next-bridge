@@ -17,7 +17,7 @@ dev = [
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "ruff>=0.14.14",
-    "basedpyright>=1.37.3",
+    "basedpyright>=1.37.4",
 ]
 
 [build-system]
