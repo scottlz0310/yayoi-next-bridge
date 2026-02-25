@@ -10,15 +10,19 @@
 - **リリーススクリプト**: インタラクティブなリリースフロー
 - **GitHub Actions**: タグプッシュ時に自動ビルド＆リリース
 
+## 対象
+
+この手順は **Chrome拡張版** のリリース手順です。  
+**Tampermonkey版** の配布・更新は [tampermonkey/README.md](../tampermonkey/README.md) を参照してください。
+
 ## バージョン管理対象ファイル
 
-以下の3ファイルでバージョンを管理しています。バージョンバンプ時はすべて同時に更新する必要があります。
+以下の2ファイルでバージョンを管理しています。バージョンバンプ時は同時に更新する必要があります。
 
 | ファイル | フォーマット | 用途 |
 |----------|--------------|------|
 | `chrome-extension/package.json` | JSON (`"version": "x.x.x"`) | npm パッケージバージョン |
 | `chrome-extension/manifest.json` | JSON (`"version": "x.x.x"`) | Chrome拡張バージョン |
-| `pyproject.toml` | TOML (`version = "x.x.x"`) | Python パッケージバージョン |
 
 ## バージョンバンプ
 
@@ -55,7 +59,6 @@ npm run version:major   # メジャーバンプ
 ```
 chrome-extension/package.json   ← "version" フィールド
 chrome-extension/manifest.json  ← "version" フィールド
-pyproject.toml                  ← version = "..." 行
 ```
 
 ## リリースフロー
@@ -111,7 +114,7 @@ git push --tags
 ```
 1. validate-version (バージョン整合性チェック)
    ├─ タグからバージョンを抽出 (例: v0.2.0 → 0.2.0)
-   └─ 3ファイルのバージョンがタグと一致するか検証
+   └─ 2ファイルのバージョンがタグと一致するか検証
 
 2. build-extension (Chrome拡張ビルド)
    ├─ npm ci

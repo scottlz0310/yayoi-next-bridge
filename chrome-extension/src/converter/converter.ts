@@ -1,7 +1,7 @@
 /**
  * 弥生給与NEXT → 弥生会計NEXT 変換コアロジック
  *
- * referenceとyayoi_next_bridge/coreのプロトタイプをベースに
+ * 旧プロトタイプ実装の仕様をベースに
  * TypeScriptで型安全に実装したモジュール。
  */
 import { parseCSV, stringifyCSV } from './csv.ts';

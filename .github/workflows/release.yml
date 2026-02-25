@@ -44,16 +44,8 @@ jobs:
           fi
           echo "✅ manifest.json: $MANIFEST_VERSION"
           
-          # pyproject.toml
-          PYPROJECT_VERSION=$(grep -E '^version\s*=' pyproject.toml | sed 's/version\s*=\s*"\([^"]*\)"/\1/')
-          if [ "$PYPROJECT_VERSION" != "$VERSION" ]; then
-            echo "❌ pyproject.toml のバージョン ($PYPROJECT_VERSION) がタグ ($VERSION) と一致しません"
-            exit 1
-          fi
-          echo "✅ pyproject.toml: $PYPROJECT_VERSION"
-          
           echo ""
-          echo "🎉 全ファイルのバージョンが一致しています: $VERSION"
+          echo "🎉 Chrome拡張関連ファイルのバージョンが一致しています: $VERSION"
 
   build-extension:
     name: Chrome拡張ビルド

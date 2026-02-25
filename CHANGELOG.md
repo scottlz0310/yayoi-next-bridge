@@ -6,8 +6,9 @@
 ## [Unreleased]
 
 ### 変更
-- Python版（`yayoi_next_bridge/`）と参考実装（`reference/`）を `archive/` に移動
-- Chrome拡張をメイン実装として位置づけ
+- パイロット版の Python/NiceGUI 実装（`archive/`、`pyproject.toml`、`uv.lock`）を削除
+- リリース時のバージョン整合性チェック対象を Chrome拡張の2ファイルに整理
+- READMEとリリース手順をChrome拡張版 + Tampermonkey版の2本立て前提に更新
 
 ## [0.1.0] - 2026-01-27
 

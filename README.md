@@ -7,7 +7,11 @@
 弥生給与Next のエクスポート出力を、弥生会計Next のインポートで取り込める形式に変換するためのコンバーターです。  
 （給与Next と 会計Next の間の "微妙な非互換" を吸収します）
 
-## 🚀 クイックスタート（Chrome拡張）
+## 🚀 クイックスタート
+
+このプロジェクトは **Chrome拡張版** と **Tampermonkey版** の2本立てです。
+
+### Chrome拡張版（推奨）
 
 最も簡単に使える方法です。**弥生会計NEXT画面で直接変換できます**。
 
@@ -36,16 +40,22 @@ npm run build
 
 > 💡 **Tips**: 変換後のダウンロードファイルから直接インポートボタンへD&Dすると、流れが途切れず効率的です！
 
-## 📦 実装
+### Tampermonkey版（軽量）
 
-**Chrome拡張**が推奨の実装です。
+1. Tampermonkey をインストール
+2. [tampermonkey/yayoi-next-bridge.user.js](tampermonkey/yayoi-next-bridge.user.js) をインストール
+3. 弥生会計NEXTのインポート画面で「📁 給与データを変換」ボタンから実行
+
+詳細は [tampermonkey/README.md](tampermonkey/README.md) を参照してください。
+
+## 📦 配布形態（2本立て）
+
+用途に応じて以下の2実装を利用できます。
 
 | 実装 | 場所 | ステータス | 特徴 |
 |------|------|------------|------|
 | **Chrome拡張** ✨ | `chrome-extension/` | ✅ 安定版 | 弥生画面で直接変換、D&D対応 |
 | Tampermonkey | `tampermonkey/` | ✅ 軽量版 | 単一ファイル、ビルド不要 |
-| Pythonスクリプト | `archive/reference/` | 📦 アーカイブ | CLI、一括変換対応 |
-| Python GUI | `archive/yayoi_next_bridge/` | 📦 アーカイブ | NiceGUIプロトタイプ |
 
 > 💡 **Tampermonkey版**: 開発者・パワーユーザー向けの軽量実装です。[Tampermonkey](https://www.tampermonkey.net/)がインストール済みなら、[yayoi-next-bridge.user.js](tampermonkey/yayoi-next-bridge.user.js) のRaw URLから直接インストールできます。
 
@@ -62,7 +72,7 @@ npm run build
 ### ✅ できること
 
 - 弥生給与Next の出力データを、弥生会計Next で取り込める形式に変換
-- Chrome拡張でシームレスな変換体験
+- Chrome拡張版またはTampermonkey版でシームレスな変換体験
 - Shift-JISエンコーディングの維持
 - 入力ファイルのバリデーション
 
@@ -84,8 +94,8 @@ npm run build
 
 | 項目 | 技術 |
 |------|------|
-| 言語 | TypeScript（strict mode） |
-| ビルド | Vite + CRXJS |
+| 言語 | TypeScript（Chrome拡張） / JavaScript（Tampermonkey） |
+| ビルド | Vite + CRXJS（Chrome拡張） / 不要（Tampermonkey） |
 | Lint/Format | Biome |
 | テスト | Vitest |
 | 文字コード | encoding-japanese |
@@ -104,10 +114,7 @@ npm run build
 │  └─ tests/                  # テスト
 ├─ tampermonkey/              # Tampermonkey版（軽量実装）
 ├─ scripts/                   # リリーススクリプト
-├─ docs/                      # ドキュメント
-└─ archive/                   # アーカイブ（Python版）
-   ├─ reference/              # 参考実装（Python/PowerShell）
-   └─ yayoi_next_bridge/      # NiceGUI版プロトタイプ
+└─ docs/                      # ドキュメント
 ```
 
 ## 🧪 開発

@@ -11,7 +11,7 @@
 
 ### 現状
 - 弥生給与NEXTからエクスポートした仕訳データは、弥生会計NEXTにそのままインポートできない
-- 現在の解決策：スタンドアロンの変換ツール（Python/NiceGUI）
+- 旧来はスタンドアロンの変換ツール（Python/NiceGUI）も存在したが、現在は削除済み
 - ユーザーは「エクスポート → 変換ツール起動 → 変換 → インポート」という手順が必要
 
 ### 課題
@@ -189,7 +189,7 @@ function encodeShiftJIS(text: string): ArrayBuffer {
 
 ### 変換ロジックの移植
 
-Python実装からTypeScriptへの1:1移植（`reference/` と `yayoi_next_bridge/` の既存実装・ドキュメントを参照）：
+過去実装の仕様を基にしたTypeScriptへの1:1移植：
 
 ```typescript
 // types.ts
@@ -262,7 +262,7 @@ interface AccountingEntry {
 - Chromeに読み込んでSide Panelが開ける
 
 ### Phase 2: 変換ロジック移植
-- [ ] 既存実装（`reference/` と `yayoi_next_bridge/`）と既存ドキュメントを参照して差分を確認
+- [ ] 旧実装仕様との差分を確認
 - [ ] 型定義（PayrollEntry, AccountingEntry）
 - [ ] Shift-JISエンコーディング処理（encoding-japanese）
 - [ ] CSV読み書きユーティリティ（行配列基準）
@@ -308,13 +308,12 @@ interface AccountingEntry {
 
 | 実装 | 用途 | 状態 |
 |------|------|------|
-| `reference/` | プロトタイプ・参照実装 | 完成（維持） |
-| `yayoi_next_bridge/` | スタンドアロン版（Python/NiceGUI） | 完成（維持） |
-| `chrome-extension/` | Chrome拡張版（TypeScript） | **新規作成** |
+| `chrome-extension/` | Chrome拡張版（TypeScript） | メイン実装 |
+| `tampermonkey/` | ユーザースクリプト版（JavaScript） | 軽量実装として維持 |
 
-スタンドアロン版は「Chrome以外のブラウザユーザー」「オフライン環境」向けとして維持する。
+Python/NiceGUIのスタンドアロン版は削除済み。
 
-> **移植時の参照方針**: `reference/` と `yayoi_next_bridge/` の実装・ドキュメントを参照し、仕様差分を記録する。
+> **移植時の参照方針**: 変換仕様は既存のTypeScript実装とテストを正として差分を記録する。
 
 ## 参考リンク
 

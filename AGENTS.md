@@ -3,63 +3,60 @@
 ## AI応答・ドキュメント言語
 
 - **AIは日本語で応答すること**：コード生成時のコメント、ドキュメント生成、会話応答はすべて日本語で行うこと。
-- コード内のdocstring、コメント、READMEなどのドキュメントも日本語で記述すること。
-- 変数名・関数名などの識別子は英語を使用するが、説明的なコメントは日本語で補足すること。
+- コード内のコメント、README、設計書などのドキュメントも日本語で記述すること。
+- 変数名・関数名などの識別子は英語を使用すること。
 
-## 技術スタック選定方針
+## 技術スタック方針
 
-- `reference/` 配下のPython/PowerShellスクリプトはあくまでプロトタイプ・参照実装である。
-- 本実装（`yayoi_next_bridge/`）の技術スタックは、プロトタイプに引きずられることなく**フラットに選定**すること。
-- 要件に最適な言語・フレームワーク・ライブラリを検討し、根拠を明示した上で採用すること。
-- 選定時は以下を考慮：パフォーマンス、保守性、エコシステムの成熟度、チームの習熟度、デプロイ環境との親和性。
+- メイン実装は `chrome-extension/`（TypeScript）を採用する。
+- 補助実装として `tampermonkey/`（JavaScript）を維持する。
+- 旧パイロット版の Python/NiceGUI 実装は削除済みであり、新規実装対象に含めない。
 
 ## Lint・型チェック・品質基準
 
-- コーディング開始前に、lint/型チェックを**最高に厳密な設定**で構成すること。
-- Python: `ruff`（最厳密ルールセット）、`basedpyright --strict` を必須とする。
-- TypeScript: `strict: true` + `noUncheckedIndexedAccess` 等の追加厳密オプションを有効化。
-- その他の言語でも、利用可能な最も厳格なlint/型チェック設定を採用すること。
-- CI/CDパイプラインでlint・型チェックをゲートとし、エラーがある場合はマージをブロックすること。
+- TypeScript は `strict: true` を維持し、型安全性を崩さないこと。
+- Lint/Format は `biome` を使用し、CI でのチェックを必須とすること。
+- CI/CD のゲート（typecheck / lint / test / build）を通過しない変更はマージしないこと。
 
 ## テスト必須方針
 
 - **すべての機能実装にはテストを必ず書くこと**。テストなしのコードはマージ不可。
-- テストカバレッジの目標：新規コードは80%以上を目指す。
-- テストの種類：ユニットテスト（必須）、統合テスト（主要フローに対して）、E2Eテスト（必要に応じて）。
-- テストファイルは `tests/` ディレクトリに配置し、`test_*.py` または `*.test.ts` 等の命名規則に従うこと。
+- 新規・変更コードのカバレッジは 80% 以上を目標とすること。
+- ユニットテストは必須。主要フローは統合/E2Eも検討すること。
 
 ## プロジェクト構造とモジュール構成
 
-- `reference/` には、現在実行可能な変換ツールが含まれます：`convert_payroll_to_accounting.py` (Python) および `Convert-PayrollToAccounting.ps1` (PowerShell)、さらに `pyproject.toml` と `uv.lock`。
-- リポジトリルートにある`README.md`には、ロードマップと計画中の`yayoi_next_bridge/`パッケージレイアウトが記載されています。新しいコアロジックを導入する場合は、そこに配置し、`reference/`はレガシー/参照コードとして維持してください。
-- バッチモード使用時、スクリプトは `reference/` ディレクトリの親フォルダ直下に `YY-01` から `YY-12` までの月別フォルダを想定しています（YYは年度プレフィックス、例: R7, 2025）。
+- `chrome-extension/` は本体（UI、変換ロジック、テスト）を格納する。
+- `tampermonkey/` は軽量配布向けユーザースクリプトを格納する。
+- `docs/` は運用・設計ドキュメント、`scripts/` はリリース補助スクリプトを格納する。
 
 ## ビルド、テスト、開発コマンド
 
-- `cd reference` — スクリプトディレクトリから作業（一貫性のため推奨）。
-- `uv run python convert_payroll_to_accounting.py --all` — 親ディレクトリ下の全月フォルダを一括変換。
-- `uv run python convert_payroll_to_accounting.py 「<入力ファイル>.txt」` — 単一ファイルを変換；出力は `*_弥生会計NEXT用.txt`。
-- `.\Convert-PayrollToAccounting.ps1 -All` — PowerShellによる一括変換。
-- `.\Convert-PayrollToAccounting.ps1 -InputFile 「<path>」` — PowerShellによる単一ファイル変換。
+- `cd chrome-extension`
+- `npm ci`
+- `npm run typecheck`
+- `npm run lint`
+- `npm run test:coverage -- --run`
+- `npm run build`
+- `node scripts/bump-version.js patch|minor|major|<version>`
+- `node scripts/release.js [patch|minor|major|<version>]`
 
 ## コーディングスタイルと命名規則
 
-- Python: 4スペースのインデント、関数名は`snake_case`、定数は`UPPER_SNAKE_CASE`（例: `HEADER_25`）、コアルーチンには明確なdocstringを記述。
-- PowerShell: 動詞+名詞の関数名（例: `Convert-PayrollFile`）、パラメータは`CmdletBinding`でPascalCaseを使用。
-- CSV列順序とフラグマッピングを安定化（0110/0100/0101 → 2110/2100/2101）。Shift-JIS入出力処理と`_弥生会計NEXT用.txt`サフィックスを維持。
+- TypeScript: 2スペースインデント、関数名は `camelCase`、型名は `PascalCase`。
+- 明示的な型付けを優先し、`any` の使用は避けること。
+- ボタン要素には `type` 属性を必ず明示すること。
 
 ## テストガイドライン
 
-- **すべての変更にはテストを伴うこと**。テストなしのPRは原則マージ不可。
-- 自動テストはまだ設定されていません。変更時は手動で回帰テストを実行してください：既知の入力ファイルを変換し、フラグマッピング、行数、Shift-JIS出力を確認します。
-- テストを追加する場合は、`reference/tests/` または `yayoi_next_bridge/tests/` に配置し、`test_*.py` の命名規則を使用してください。
+- テストファイルは `chrome-extension/tests/` に配置し、`*.test.ts` 命名規則に従うこと。
 - モック・スタブを適切に活用し、外部依存を分離したテストを書くこと。
 
 ## コミットとプルリクエストのガイドライン
 
-- Git履歴は簡潔な命令形の英語主語（例: 「Enhance README...」）で記述。このスタイルに従うこと。
-- PRには簡潔な説明、入力/出力ファイル名の例、エンコーディングやマッピング変更に関する注記を含めること。
+- Git履歴は簡潔な命令形の英語主語（例: `Enhance README ...`）で記述すること。
+- PRには変更概要、確認手順、必要に応じてUI差分や入出力例を含めること。
 
 ## セキュリティとデータ取り扱い
 
-- 実際の給与データをコミットしないこと。共有する例には、個人識別情報を削除した安全なサンプルを使用すること。
+- 実際の給与データをコミットしないこと。共有サンプルは個人識別情報を削除すること。

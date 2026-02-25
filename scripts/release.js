@@ -55,7 +55,6 @@ function checkVersionConsistency() {
   const files = [
     { path: "chrome-extension/package.json", getter: (c) => JSON.parse(c).version },
     { path: "chrome-extension/manifest.json", getter: (c) => JSON.parse(c).version },
-    { path: "pyproject.toml", getter: (c) => c.match(/^version\s*=\s*"([^"]+)"/m)?.[1] },
   ];
 
   let allMatch = true;

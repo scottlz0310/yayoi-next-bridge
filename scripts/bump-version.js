@@ -32,11 +32,6 @@ const VERSION_FILES = [
     type: "json",
     key: "version",
   },
-  {
-    path: "pyproject.toml",
-    type: "toml",
-    pattern: /^version\s*=\s*"([^"]+)"/m,
-  },
 ];
 
 /**
@@ -95,19 +90,6 @@ function updateJsonVersion(filePath, key, newVersion) {
 }
 
 /**
- * TOMLファイルのバージョンを更新
- */
-function updateTomlVersion(filePath, pattern, newVersion) {
-  const fullPath = join(ROOT, filePath);
-  let content = readFileSync(fullPath, "utf-8");
-  const match = content.match(pattern);
-  const oldVersion = match ? match[1] : null;
-  content = content.replace(pattern, `version = "${newVersion}"`);
-  writeFileSync(fullPath, content, "utf-8");
-  return oldVersion;
-}
-
-/**
  * メイン処理
  */
 function main() {
@@ -131,8 +113,6 @@ function main() {
     try {
       if (file.type === "json") {
         updateJsonVersion(file.path, file.key, newVersion);
-      } else if (file.type === "toml") {
-        updateTomlVersion(file.path, file.pattern, newVersion);
       }
       console.log(`✅ ${file.path}`);
     } catch (error) {
