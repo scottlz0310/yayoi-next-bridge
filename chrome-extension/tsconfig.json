@@ -29,7 +29,6 @@
     "allowSyntheticDefaultImports": true,
 
     // パス設定
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
