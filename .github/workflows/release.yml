@@ -54,20 +54,23 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: pnpm セットアップ
+        uses: pnpm/action-setup@v4
+
       - name: Node.js セットアップ
         uses: actions/setup-node@v6
         with:
           node-version: '24.16.0'
-          cache: 'npm'
-          cache-dependency-path: chrome-extension/package-lock.json
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: 依存関係インストール
         working-directory: chrome-extension
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: ビルド
         working-directory: chrome-extension
-        run: npm run build
+        run: pnpm run build
 
       - name: ZIPパッケージ作成
         working-directory: chrome-extension

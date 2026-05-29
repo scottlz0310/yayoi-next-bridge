@@ -11,6 +11,7 @@
 - メイン実装は `chrome-extension/`（TypeScript）を採用する。
 - 補助実装として `tampermonkey/`（JavaScript）を維持する。
 - 旧パイロット版の Python/NiceGUI 実装は削除済みであり、新規実装対象に含めない。
+- パッケージ管理は pnpm workspace を採用する（ルートに `pnpm-workspace.yaml` と `pnpm-lock.yaml`）。npm は使用しない。
 
 ## Lint・型チェック・品質基準
 
@@ -32,12 +33,12 @@
 
 ## ビルド、テスト、開発コマンド
 
+- `pnpm install --frozen-lockfile`（リポジトリルートで実行。workspace 全体をインストール）
 - `cd chrome-extension`
-- `npm ci`
-- `npm run typecheck`
-- `npm run lint`
-- `npm run test:coverage -- --run`
-- `npm run build`
+- `pnpm run typecheck`
+- `pnpm run lint`
+- `pnpm run test:coverage -- --run`
+- `pnpm run build`
 - `node scripts/bump-version.js patch|minor|major|<version>`
 - `node scripts/release.js [patch|minor|major|<version>]`
 

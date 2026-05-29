@@ -21,7 +21,7 @@
 
 | ファイル | フォーマット | 用途 |
 |----------|--------------|------|
-| `chrome-extension/package.json` | JSON (`"version": "x.x.x"`) | npm パッケージバージョン |
+| `chrome-extension/package.json` | JSON (`"version": "x.x.x"`) | パッケージバージョン |
 | `chrome-extension/manifest.json` | JSON (`"version": "x.x.x"`) | Chrome拡張バージョン |
 
 ## バージョンバンプ
@@ -45,13 +45,13 @@ node scripts/bump-version.js major
 node scripts/bump-version.js 0.2.0
 ```
 
-### npm スクリプト（ルートディレクトリ）
+### pnpm スクリプト（ルートディレクトリ）
 
 ```bash
-npm run version:check   # 現在のバージョン確認
-npm run version:patch   # パッチバンプ
-npm run version:minor   # マイナーバンプ
-npm run version:major   # メジャーバンプ
+pnpm run version:check   # 現在のバージョン確認
+pnpm run version:patch   # パッチバンプ
+pnpm run version:minor   # マイナーバンプ
+pnpm run version:major   # メジャーバンプ
 ```
 
 ### 更新されるファイル
@@ -117,8 +117,8 @@ git push --tags
    └─ 2ファイルのバージョンがタグと一致するか検証
 
 2. build-extension (Chrome拡張ビルド)
-   ├─ npm ci
-   ├─ npm run build
+   ├─ pnpm install --frozen-lockfile
+   ├─ pnpm run build
    └─ ZIPパッケージ作成 (yayoi-next-bridge-x.x.x.zip)
 
 3. create-release (GitHubリリース作成)
