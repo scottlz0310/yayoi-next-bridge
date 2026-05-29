@@ -18,7 +18,7 @@
 
 ### 前提条件
 
-- Node.js 18以上
+- Node.js 26.2.0 以上（CI/Release と同一。commitlint が Node 22.12.0 以上を要求するため）
 - pnpm（パッケージマネージャ。リポジトリは pnpm workspace 構成）
 - Chrome 114以上（Side Panel API対応）
 

@@ -1,0 +1,9 @@
+# 改行コードを LF に統一する（autocrlf による環境差を排除）。
+# biome / CI は LF 前提のため、Windows の作業ツリーでも LF を維持する。
+* text=auto eol=lf
+
+# バイナリファイルは改行変換の対象外
+*.png binary
+*.jpg binary
+*.ico binary
+*.zip binary
