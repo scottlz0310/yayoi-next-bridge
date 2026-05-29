@@ -5,6 +5,8 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-29
+
 ### 追加
 - Git hooks 管理に lefthook を導入（pre-commit: biome lint + 型チェック、commit-msg: commitlint）
 - commitlint（`@commitlint/config-conventional`）による Conventional Commits 準拠チェック（日本語 subject 向けに `subject-case` は無効化）

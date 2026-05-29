@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "弥生NEXTブリッジ",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "弥生給与NEXTのデータを弥生会計NEXTのインポート形式に変換します",
   "icons": {
     "16": "assets/icons/icon16.png",
