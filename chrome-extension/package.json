@@ -1,6 +1,6 @@
 {
   "name": "@yayoi-next-bridge/chrome-extension",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "弥生給与NEXT → 弥生会計NEXT データ変換 Chrome拡張",
   "type": "module",
   "scripts": {
