@@ -5,7 +5,15 @@
 
 ## [Unreleased]
 
+### 追加
+- Git hooks 管理に lefthook を導入（pre-commit: biome lint + 型チェック、commit-msg: commitlint）
+- commitlint（`@commitlint/config-conventional`）による Conventional Commits 準拠チェック（日本語 subject 向けに `subject-case` は無効化）
+- vitest にカバレッジ閾値（statements / functions / lines 80%）を追加
+- `.gitattributes` を追加し、改行コードを LF に統一（autocrlf による環境差を排除）
+- ルート `package.json` に workspace 横断スクリプト（`lint` / `typecheck` / `test` / `test:coverage` / `build`）を追加
+
 ### 変更
+- CI・リリースワークフローの Node.js を 26.2.0 に更新
 - パッケージマネージャを npm から pnpm に移行し、ルートを pnpm workspace 化（`pnpm-workspace.yaml` / `pnpm-lock.yaml` を追加、`package-lock.json` を削除）
 - CI・リリースワークフローを pnpm（`pnpm/action-setup` + `pnpm install --frozen-lockfile`）ベースに更新
 - パイロット版の Python/NiceGUI 実装（`archive/`、`pyproject.toml`、`uv.lock`）を削除

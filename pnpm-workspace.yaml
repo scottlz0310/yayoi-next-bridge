@@ -1,2 +1,4 @@
 packages:
   - chrome-extension
+allowBuilds:
+  lefthook: true

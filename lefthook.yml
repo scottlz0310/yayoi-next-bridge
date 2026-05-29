@@ -1,0 +1,15 @@
+# Git hooks 管理（lefthook）
+# pre-commit: 静的解析を実行（test は CI に委譲）
+# commit-msg: Conventional Commits 準拠を検証（commitlint）
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: pnpm --filter @yayoi-next-bridge/chrome-extension run lint
+    typecheck:
+      run: pnpm --filter @yayoi-next-bridge/chrome-extension run typecheck
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
