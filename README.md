@@ -18,9 +18,9 @@
 ### インストール
 
 ```bash
+pnpm install
 cd chrome-extension
-npm install
-npm run build
+pnpm run build
 ```
 
 ### Chromeへの読み込み
@@ -120,12 +120,12 @@ npm run build
 ## 🧪 開発
 
 ```bash
+pnpm install         # リポジトリルートで実行（workspace 全体をインストール）
 cd chrome-extension
-npm install
-npm run dev          # 開発サーバー（ホットリロード）
-npm run test         # テスト実行
-npm run lint         # Lintチェック
-npm run build        # 本番ビルド
+pnpm run dev          # 開発サーバー（ホットリロード）
+pnpm run test         # テスト実行
+pnpm run lint         # Lintチェック
+pnpm run build        # 本番ビルド
 ```
 
 リリース手順は [docs/release.md](docs/release.md) を参照してください。

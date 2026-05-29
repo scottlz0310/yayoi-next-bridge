@@ -19,14 +19,15 @@
 ### 前提条件
 
 - Node.js 18以上
+- pnpm（パッケージマネージャ。リポジトリは pnpm workspace 構成）
 - Chrome 114以上（Side Panel API対応）
 
 ### セットアップ
 
 ```bash
+pnpm install        # リポジトリルートで実行（workspace 全体をインストール）
 cd chrome-extension
-npm install
-npm run build
+pnpm run build
 ```
 
 ### Chromeへの読み込み
@@ -62,28 +63,28 @@ npm run build
 ### 開発サーバーの起動
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### テストの実行
 
 ```bash
-npm test           # 全テストを実行
-npm test -- --ui   # UIでテストを実行
+pnpm test           # 全テストを実行
+pnpm test -- --ui   # UIでテストを実行
 ```
 
 ### Lint/Format
 
 ```bash
-npm run lint       # Lintチェック
-npm run lint:fix   # 自動修正
-npm run format     # フォーマット
+pnpm run lint       # Lintチェック
+pnpm run lint:fix   # 自動修正
+pnpm run format     # フォーマット
 ```
 
 ### ビルド
 
 ```bash
-npm run build      # 本番ビルド
+pnpm run build      # 本番ビルド
 ```
 
 ## 技術スタック

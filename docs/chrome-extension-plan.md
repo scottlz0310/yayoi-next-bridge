@@ -258,7 +258,7 @@ interface AccountingEntry {
 - [ ] 基本的なmanifest.json作成（Side Panel対応）
 
 **Done条件:**
-- `npm run build` でエラーなくビルドできる
+- `pnpm run build` でエラーなくビルドできる
 - Chromeに読み込んでSide Panelが開ける
 
 ### Phase 2: 変換ロジック移植

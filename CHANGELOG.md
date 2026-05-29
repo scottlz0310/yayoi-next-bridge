@@ -6,6 +6,8 @@
 ## [Unreleased]
 
 ### 変更
+- パッケージマネージャを npm から pnpm に移行し、ルートを pnpm workspace 化（`pnpm-workspace.yaml` / `pnpm-lock.yaml` を追加、`package-lock.json` を削除）
+- CI・リリースワークフローを pnpm（`pnpm/action-setup` + `pnpm install --frozen-lockfile`）ベースに更新
 - パイロット版の Python/NiceGUI 実装（`archive/`、`pyproject.toml`、`uv.lock`）を削除
 - リリース時のバージョン整合性チェック対象を Chrome拡張の2ファイルに整理
 - READMEとリリース手順をChrome拡張版 + Tampermonkey版の2本立て前提に更新
