@@ -23,11 +23,11 @@
     "@crxjs/vite-plugin": "^2.4.0",
     "@types/chrome": "^0.1.42",
     "@types/encoding-japanese": "^2.2.1",
-    "@vitest/coverage-v8": "^4.1.7",
-    "@vitest/ui": "^4.1.7",
+    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/ui": "^4.1.8",
     "typescript": "^6.0.3",
-    "vite": "^8.0.15",
-    "vitest": "^4.1.7"
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "private": true
 }
