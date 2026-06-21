@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
-    "@crxjs/vite-plugin": "^2.6.1",
-    "@types/chrome": "^0.1.43",
+    "@crxjs/vite-plugin": "^2.7.0",
+    "@types/chrome": "^0.2.0",
     "@types/encoding-japanese": "^2.2.1",
     "@vitest/coverage-v8": "^4.1.9",
     "@vitest/ui": "^4.1.9",
