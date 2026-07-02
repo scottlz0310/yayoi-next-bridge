@@ -4,7 +4,7 @@
   "private": true,
   "description": "弥生給与NEXT → 弥生会計NEXT データ変換ツール",
   "type": "module",
-  "packageManager": "pnpm@11.1.3",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "prepare": "lefthook install",
     "lint": "pnpm -r run lint",
