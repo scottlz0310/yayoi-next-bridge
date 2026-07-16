@@ -19,7 +19,7 @@
     "encoding-japanese": "^2.2.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.3",
+    "@biomejs/biome": "^2.5.4",
     "@crxjs/vite-plugin": "^2.7.1",
     "@types/chrome": "^0.2.2",
     "@types/encoding-japanese": "^2.2.1",
